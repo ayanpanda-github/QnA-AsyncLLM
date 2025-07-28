@@ -17,7 +17,7 @@ from app.core.config import settings
 config = context.config
 
 # Override sqlalchemy.url with our settings
-config.set_main_option("sqlalchemy.url", settings.db_url.replace("+asyncpg", ""))
+config.set_main_option("sqlalchemy.url", settings.db_url.replace("+asyncpg", "").replace("%", "%%"))
 
 # Interpret the config file for Python logging.
 # This line sets up loggers basically.

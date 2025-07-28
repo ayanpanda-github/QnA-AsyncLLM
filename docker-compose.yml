@@ -1,29 +1,18 @@
-version: "3.9"
 
+version: "3.9"
 services:
   api:
     build: .
     env_file: .env
-    depends_on:
-      - db
-    ports:
-      - "8000:8000"
-    environment:
-      - DB_URL=postgresql+asyncpg://user:password@db/docqa
-    command: >
-      sh -c "alembic upgrade head &&
-             uvicorn app.main:app --host 0.0.0.0 --port 8000"
-
+    depends_on: [db]
+    ports: ["8000:8000"]
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000
   db:
-    image: postgres:15-alpine
+    image: postgres:16-alpine
     environment:
-      POSTGRES_USER: user
-      POSTGRES_PASSWORD: password
-      POSTGRES_DB: docqa
-    volumes:
-      - pgdata:/var/lib/postgresql/data
-    ports:
-      - "5432:5432"
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASS}
+      POSTGRES_DB: ${DB_NAME}
 
-volumes:
-  pgdata: {}
+    volumes: [pgdata:/var/lib/postgresql/data]
+volumes: { pgdata: {} }
